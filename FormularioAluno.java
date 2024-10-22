@@ -86,15 +86,35 @@ public class FormularioAluno extends JFrame {
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Lógica para cadastrar o aluno
-                String nome = nomeField.getText();
-                String endereco = enderecoField.getText();
-                int idade = Integer.parseInt(idadeField.getText()); // Converte a idade para int
-                Aluno aluno = new Aluno(nome, endereco, idade);
-                alunos.add(aluno); // Adiciona o aluno à lista
-                JOptionPane.showMessageDialog(null, "Aluno cadastrado: " + nome);
+                try {
+                    // Verifica se o campo nome contém apenas letras
+                    String nome = nomeField.getText();
+                    if (!nome.matches("[a-zA-Z\\s]+")) {
+                        throw new IllegalArgumentException("Nome deve conter apenas letras.");
+                    }
+        
+                    // Verifica se o campo endereço contém apenas letras e espaços
+                    String endereco = enderecoField.getText();
+                    if (!endereco.matches("[a-zA-Z\\s]+")) {
+                        throw new IllegalArgumentException("Endereço deve conter apenas letras.");
+                    }
+        
+                    // Tenta converter a idade para um número inteiro
+                    int idade = Integer.parseInt(idadeField.getText()); // Converte a idade para int
+                    Aluno aluno = new Aluno(nome, endereco, idade);
+                    alunos.add(aluno); // Adiciona o aluno à lista
+                    JOptionPane.showMessageDialog(null, "Aluno cadastrado: " + nome);
+                } catch (NumberFormatException ex) {
+                    // Caso o valor inserido no campo idade não seja um número, exibe uma mensagem de erro
+                    JOptionPane.showMessageDialog(null, "Erro: Idade deve ser um número válido.", "Erro de Entrada", JOptionPane.ERROR_MESSAGE);
+                } catch (IllegalArgumentException ex) {
+                    // Caso os campos nome ou endereço contenham caracteres inválidos, exibe uma mensagem de erro
+                    JOptionPane.showMessageDialog(null, "Erro: " + ex.getMessage(), "Erro de Entrada", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
+        
+        
 
         limparButton.addActionListener(new ActionListener() {
             @Override
